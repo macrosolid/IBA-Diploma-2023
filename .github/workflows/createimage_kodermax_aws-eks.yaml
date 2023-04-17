@@ -20,12 +20,12 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+      # - name: Create a GitHub release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     tag: ${{ steps.tag_version.outputs.new_tag }}
+      #     name: Release ${{ steps.tag_version.outputs.new_tag }}
+      #     body: ${{ steps.tag_version.outputs.changelog }}
 
       # Login to Dockerhub.
       - name: Login to Dockerhub
@@ -40,7 +40,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ steps.tag_version.outputs }} # ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest,
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ secrets.GITHUB_TOKEN }} # ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest,
         
   deploy:
     runs-on: ubuntu-latest
