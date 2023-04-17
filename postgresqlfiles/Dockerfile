@@ -1,15 +1,7 @@
-FROM python:latest
+FROM postgres
 
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
-		postgresql-client \
-	&& rm -rf /var/lib/apt/lists/*
+ENV POSTGRES_PASSWORD docker
 
-WORKDIR /usr/src/app
-COPY requirements.txt ./
-COPY mysite /usr/src/app/
-RUN pip install -r requirements.txt
-COPY . .
+ENV POSTGRES_DB world
 
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+COPY world.sql /docker-entrypoint-initdb.d/
