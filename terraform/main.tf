@@ -5,7 +5,7 @@ resource "random_string" "random" {
 }
 
 resource "aws_ssm_parameter" "name" {
-  name = "dm-hw14-postgresql"
+  name = "dm-diploma-postgresql"
   type = "SecureString"
   value = random_string.random.result
 }
@@ -21,11 +21,12 @@ resource "aws_db_instance" "education" {
   publicly_accessible    = true
   skip_final_snapshot    = true
   tags = {
-    Name = aws_ssm_parameter.name.name
-    IBA_Lesson = "Lesson 14"
+    Name = aws_ssm_parameter.name.name 
+    IBA_Lesson = "Diploma"
   }
 }
 
 output "aws_instance_password" {  # Show ID of created EC2 instance
+  sensitive = true
   value = aws_ssm_parameter.name.value
 }

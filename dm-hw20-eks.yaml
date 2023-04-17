@@ -2,7 +2,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: dm-hw20-eks-cluster  # Name of the EKS cluster.
+  name: dm-diploma-eks-cluster  # Name of the EKS cluster.
   region: us-east-1
   version: "1.25" # Kubernetes version of the EKS cluster
 
@@ -14,6 +14,6 @@ nodeGroups: # List of node groups that will be created in the EKS cluster.
     withAddonPolicies:
       albIngress: true # Enable the ALB Ingress Controller addon policy.
   minSize: 1 # Minimum number of nodes in the node group.
-  maxSize: 2 # Maximum number of nodes in the node group.
+  maxSize: 3 # Maximum number of nodes in the node group.
 
 # availabilityZones: ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d, 'us-east-1e', 'us-east-1f']  # Exclude  'us-east-1e' - because here has a problems
