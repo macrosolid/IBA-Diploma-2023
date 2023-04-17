@@ -1,0 +1,27 @@
+apiVersion: apps/v1         # The API version for the Kubernetes resource.
+kind: Deployment            # The type of Kubernetes resource.
+
+metadata:                   # Metadata for the resource.
+  name: dm-diploma-django-deployment  # The name of the deployment.
+  labels:  # Key-value pairs used to label and organize the resource.
+    app: django
+    tier: backend           # Label for the tier of the application.
+
+spec:                       # Specification for the resource.
+  replicas: 1               # The desired number of replicas for the deployment.
+  selector:                 # Selects the set of Pods targeted by the deployment.
+    matchLabels:            # The labels used for Pod selection.
+      app: django              # Label for the application name.
+      tier: backend         # Label for the tier of the application.
+  template:  # The template used to create new Pods for the deployment.
+    metadata:
+      labels:
+        app: django            # Label for the application name.
+        tier: backend       # Label for the tier of the application.
+    spec:
+      containers:           # List of containers belonging to the Pod.
+      - name: django           # Name of the container.
+        # The Docker image used for the container.
+        image: macrosolid/djangoproject:latest
+        ports:
+        - containerPort: 8000
