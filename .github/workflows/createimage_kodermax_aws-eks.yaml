@@ -5,8 +5,6 @@ name: Build and Deploy Django project Images
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*'
   pull_request:
