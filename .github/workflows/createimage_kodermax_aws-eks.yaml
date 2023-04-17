@@ -29,7 +29,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: "${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest"
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ git describe --tags }}-${{ git rev-parse --short HEAD }}
 
   deploy:
     runs-on: ubuntu-latest
