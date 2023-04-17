@@ -16,10 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set version
-        id: set-version
-        run: echo "::set-output name=version::$(git describe --tags --abbrev=0)"
-
       # Login to Dockerhub.
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -33,16 +29,17 @@ jobs:
         with:
           context: .
           push: true
-          tags: "${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ steps.vars.outputs.tag }}, ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest"
-          #tags: macrosolid/phpwebpage:latest
+          tags: "${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:${{ github.sha }}, ${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject:latest"
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Checkout the code.
       - name: Checkout code
         uses: actions/checkout@v2
-  
+
+      # Configure AWS credentials.
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -51,9 +48,31 @@ jobs:
           aws-region: us-east-1
           aws-output: json
 
+      # Login to Amazon ECR.
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry: ${{ secrets.AWS_ECR_REGISTRY }}
+
+      # # Install and configure ArgoCD CLI.
+      # - name: Install and configure ArgoCD CLI
+      #   run: |
+      #     curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.1.2/argocd-linux-amd64
+      #     chmod +x /usr/local/bin/argocd
+      #     argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ secrets.ARGOCD_SERVER }}
+
+      # # Install Helm.
+      # - name: Install Helm
+      #   run: |
+      #     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      # # Deploy the Helm chart using ArgoCD.
+      # - name: Deploy Helm chart using ArgoCD
+      #   run: |
+      #     helm upgrade --install djangoproject ./helm-chart --set image.repository=${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject,image.tag=${{ github.sha }},replicaCount=2
+      #     argocd app sync djangoproject
+
 
       # - name: Deploy php_service and php_deployment
       #   uses: kodermax/kubectl-aws-eks@master
