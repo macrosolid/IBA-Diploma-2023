@@ -25,14 +25,15 @@ spec:
             - containerPort: 8000
           env:
             - name: POSTGRES_USER
-              value: "khabdrick"
+              value: "macrosolid"
             - name: POSTGRES_PASSWORD
               value: "secure-password"
             - name: POSTGRES_DB
-              value: "leads"
+              value: "djangodb"
             - name: DATABASE_URL
             # Postgres here must match the PostgreSQL service name you created earlier.
               value: psql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
+          # command: ["python", "manage.py", "migration"]
 
 ---
 # START Service
