@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: macrosolid/djangoproject:v0.0.18
+          image: macrosolid/djangoproject:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

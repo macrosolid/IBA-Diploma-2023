@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'polls.apps.UsersConfig', #This object was created for us in /polls/apps.py
+    'polls',
 ]
 
 MIDDLEWARE = [
@@ -95,7 +95,6 @@ DATABASES = {
     # read os.environ['DATABASE_URL'] and raises
     # ImproperlyConfigured exception if not found
     'default': env.db(),
-
 }
 
 # Password validation
