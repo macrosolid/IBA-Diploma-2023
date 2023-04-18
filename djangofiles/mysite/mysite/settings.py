@@ -13,7 +13,7 @@ import environ
 import os
 from pathlib import Path
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join('mysite/mysite', '.env'))
 
 env = environ.Env(
     # set casting, default value

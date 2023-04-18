@@ -54,22 +54,22 @@ jobs:
           tags: ${{ steps.metadb.outputs.tags }}
           labels: ${{ steps.metadb.outputs.labels }}
         
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     # Checkout the code.
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Checkout the code.
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     # Configure AWS credentials.
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-east-1
-  #         aws-output: json
+      # Configure AWS credentials.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          aws-output: json
 
 
       # # Install and configure ArgoCD CLI.
@@ -91,13 +91,13 @@ jobs:
       #     argocd app sync djangoproject
 
 
-      # - name: Deploy php_service and php_deployment
-      #   uses: kodermax/kubectl-aws-eks@master
-      #   env:
-      #     KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
-      #   with:
-      #     args: |
-      #       apply -f php_service.yaml
+      - name: Deploy php_service and php_deployment
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
+        with:
+          args: |
+            apply -f djangonew_deployment.yaml
       #       sleep 10
       #       kubectl apply -f php_deployment.yaml
       #       sleep 10
