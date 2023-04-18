@@ -8,7 +8,7 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY requirements.txt ./
 COPY mysite/ /usr/src/app/
-COPY mysite/.env /usr/src/app/
+COPY mysite/mysite/.env /usr/src/app/
 RUN pip install -r requirements.txt 
 
 EXPOSE 8000
