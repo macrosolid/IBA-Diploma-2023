@@ -48,7 +48,7 @@ jobs:
       - name: Build and push postgresql
         uses: docker/build-push-action@v4
         with:
-          context: postgresqlfiles/
+          # context: postgresqlfiles/
           push: ${{ github.event_name != 'push tag' }}
           tags: ${{ steps.metadb.outputs.tags }}
           labels: ${{ steps.metadb.outputs.labels }}
