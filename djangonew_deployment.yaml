@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dm-diploma-django-deploy
+  labels:  # Key-value pairs used to label and organize the resource.
+    app: django
+    tier: backend  # Label for the tier of the application.
+spec:
+  replicas: 1  # The desired number of replicas for the deployment.
+  selector:  # Selects the set of Pods targeted by the deployment.
+    matchLabels:  # The labels used for Pod selection.
+      app: django  # Label for the application name.
+      tier: backend  # Label for the tier of the application.
+  template:  # The template used to create new Pods for the deployment.
+    metadata:
+      labels:
+        app: django            # Label for the application name.
+        tier: backend       # Label for the tier of the application.
+    spec:
+      containers:
+        - name: django
+          image: macrosolid/djangoproject:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_USER
+              value: "khabdrick"
+            - name: POSTGRES_PASSWORD
+              value: "secure-password"
+            - name: POSTGRES_DB
+              value: "leads"
+            - name: DATABASE_URL
+            # Postgres here must match the PostgreSQL service name you created earlier.
+              value: psql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
+
+---
+# START Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: dm-diploma-django-service
+  labels:  # Key-value pairs used to label and organize the resource.
+    app: django  # Label for the application.
+    tier: backend  # Label for the tier of the application.
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80 # Port that the service exposes.
+      targetPort: 8000
+      # Port that the app is receiving requests from via the pod.
+  selector:                 # Selects the set of Pods targeted by the Service.
+#   matchLabels:            # The labels used for Pod selection.
+    # project: dev            # Label for project name.
+    app: django                # Label for the application name.
+    tier: backend           # Label for the tier of t.he application.
+# END SERVICE

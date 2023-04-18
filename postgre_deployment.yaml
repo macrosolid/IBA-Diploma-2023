@@ -1,32 +1,48 @@
 apiVersion: apps/v1
-kind: Deployment # Create a deployment
+kind: Deployment
 metadata:
-  name: dm-diploma-postgres-depl # Set the name of the deployment
+  name: dm-diploma-postgres
 spec:
-  replicas: 3 # Set 3 deployment replicas
+  replicas: 1
   selector:
     matchLabels:
-      app: postgres
-      tier: backend
+      name: postgres
   template:
     metadata:
       labels:
-        app: postgres
-        tier: backend
+        name: postgres
     spec:
       containers:
         - name: postgres
-          image: macrosolid/postgresqldiploma:latest # Docker image
-          imagePullPolicy: "IfNotPresent"
+          image: macrosolid/postgresqldiploma:latest
           ports:
-            - containerPort: 5432 # Exposing the container port 5432 for PostgreSQL client connections.
-          envFrom:
-            - configMapRef:
-                name: postgres-secret # Using the ConfigMap postgres-secret
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "khabdrick"
+            - name: POSTGRES_PASSWORD
+              value: "secure-password"
+            - name: POSTGRES_DB
+              value: "leads"
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgresdata
+              name: postgres-volume-mount
       volumes:
-        - name: postgresdata
+        - name: postgres-volume-mount
           persistentVolumeClaim:
             claimName: postgresql-data-claim
+---
+# START Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    name: postgres
+# END SERVICE
