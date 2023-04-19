@@ -90,7 +90,7 @@ jobs:
       - name: prometheus helm deployment
         uses: koslib/helm-eks-action@master
         env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
         with:
           command: | 
             helm repo add bitnami https://charts.bitnami.com/bitnami 
