@@ -93,13 +93,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-          cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
-          # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
-          config-files: fluent-bit/prod/values.yaml
-          chart-path: prometheus-community/prometheus
-          namespace: prometheus
-          name: prometheus
-          chart-repository: https://prometheus-community.github.ip/helm-charts
-          # version: 0.20.6
-          # atomic: true
+          args: |
+            helm install prometheus prometheus-community/prometheus - namespace prometheus - set server.service.type=LoadBalancer
+          # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
+          # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
+          # # config-files: fluent-bit/prod/values.yaml
+          # chart-path: prometheus-community/prometheus
+          # namespace: prometheus
+          # name: prometheus
+          # chart-repository: https://prometheus-community.github.io/helm-charts/
+          # # version: 0.20.6
+          # # atomic: true
  
