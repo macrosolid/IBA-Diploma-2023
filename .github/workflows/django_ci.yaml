@@ -58,7 +58,7 @@ jobs:
         
   deploy:
     runs-on: ubuntu-latest
-    # needs: build
+    needs: build
     steps:
       # Checkout the code.
       - name: Checkout code
@@ -100,4 +100,4 @@ jobs:
             kubectl create namespace grafana
             helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
             sleep 10
-            helm install grafana grafana/grafana --namespace grafana --set adminPassword='secretpass' --values .\monitoring\prometheus-datasource.yaml --set service.type=LoadBalance
+            helm install grafana grafana/grafana --namespace grafana --set adminPassword='secretpass' --values monitoring\prometheus-datasource.yaml --set service.type=LoadBalance
