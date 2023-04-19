@@ -94,10 +94,11 @@ jobs:
           # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
           namespace: prometheus
-          chart-repository: https://prometheus-community.github.io/helm-charts/
+          chart-repository: https://charts.bitnami.com/bitnami
           config-files: prometheus_values.yaml 
-          chart-path: prometheus-community/prometheus
+          chart-path: bitnami/kube-prometheus
           name: prometheus
+
           # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
           # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           # # config-files: fluent-bit/prod/values.yaml
