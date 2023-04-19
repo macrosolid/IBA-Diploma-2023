@@ -93,11 +93,12 @@ jobs:
           # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          namespace: prometheus
+          chart-repository: https://prometheus-community.github.io/helm-charts/
           args: |
             helm version 
-            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
             sleep 10
-            helm install prometheus prometheus-community/prometheus --namespace prometheus --set server.service.type=LoadBalancer
+            helm install prometheus prometheus-community/prometheus -f prometheus_values.yaml
           # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
           # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           # # config-files: fluent-bit/prod/values.yaml
