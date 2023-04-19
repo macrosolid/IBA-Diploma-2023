@@ -73,19 +73,19 @@ jobs:
           aws-region: us-east-1
           aws-output: json
 
-      - name: Deploy Django service with Postgres
-        uses: kodermax/kubectl-aws-eks@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
-        with:
-          args: |
-            apply -f postgres_pv.yaml  # Persistence volume for Postgresql.
-            sleep 10
-            kubectl apply -f postgres_pvc.yaml  # Persistence Volume Claim forPostreSQL pods.
-            sleep 10
-            kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
-            sleep 10
-            kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
+      # - name: Deploy Django service with Postgres
+      #   uses: kodermax/kubectl-aws-eks@master
+      #   env:
+      #     KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
+      #   with:
+      #     args: |
+      #       apply -f postgres_pv.yaml  # Persistence volume for Postgresql.
+      #       sleep 10
+      #       kubectl apply -f postgres_pvc.yaml  # Persistence Volume Claim forPostreSQL pods.
+      #       sleep 10
+      #       kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
+      #       sleep 10
+      #       kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
 
       - name: Deploy Helm
         uses: bitovi/github-actions-deploy-eks-helm@v1.2.4
@@ -94,10 +94,10 @@ jobs:
           # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
           args: |
-            helm version && sleep 1 
+            helm version 
             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
             sleep 10
-            helm install --dry-run prometheus prometheus-community/prometheus --namespace prometheus --set server.service.type=LoadBalancer
+            helm install prometheus prometheus-community/prometheus --namespace prometheus --set server.service.type=LoadBalancer
           # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
           # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           # # config-files: fluent-bit/prod/values.yaml
