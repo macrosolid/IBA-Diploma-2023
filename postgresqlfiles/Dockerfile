@@ -1,7 +1,7 @@
-FROM postgres
+FROM postgres:latest
 
 ENV POSTGRES_PASSWORD docker
 
 ENV POSTGRES_DB world
 
-COPY world.sql /docker-entrypoint-initdb.d/
+COPY polls.sql /docker-entrypoint-initdb.d/
