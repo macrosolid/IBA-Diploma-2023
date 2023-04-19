@@ -98,7 +98,7 @@ jobs:
           args: |
             helm version 
             sleep 10
-            helm install prometheus prometheus-community/prometheus -f prometheus_values.yaml
+            helm install prometheus prometheus-community/prometheus --values prometheus_values.yaml
           # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
           # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           # # config-files: fluent-bit/prod/values.yaml
