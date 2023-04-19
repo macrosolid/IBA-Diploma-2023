@@ -71,27 +71,7 @@ jobs:
           aws-region: us-east-1
           aws-output: json
 
-
-      # # Install and configure ArgoCD CLI.
-      # - name: Install and configure ArgoCD CLI
-      #   run: |
-      #     curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.1.2/argocd-linux-amd64
-      #     chmod +x /usr/local/bin/argocd
-      #     argocd login --insecure --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web ${{ secrets.ARGOCD_SERVER }}
-
-      # # Install Helm.
-      # - name: Install Helm
-      #   run: |
-      #     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-
-      # # Deploy the Helm chart using ArgoCD.
-      # - name: Deploy Helm chart using ArgoCD
-      #   run: |
-      #     helm upgrade --install djangoproject ./helm-chart --set image.repository=${{ secrets.DOCKER_HUB_USERNAME }}/djangoproject,image.tag=${{ github.sha }},replicaCount=2
-      #     argocd app sync djangoproject
-
-
-      - name: Deploy php_service and php_deployment
+      - name: Deploy Django service with Postgres
         uses: kodermax/kubectl-aws-eks@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
