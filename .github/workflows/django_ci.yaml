@@ -84,7 +84,6 @@ jobs:
             kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
             sleep 10
             kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
-            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
