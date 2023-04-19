@@ -87,25 +87,11 @@ jobs:
       #       sleep 10
       #       kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
 
-      - name: Deploy Helm
-        uses: bitovi/github-actions-deploy-eks-helm@v1.2.4
+      - name: prometheus helm deployment
+        uses: koslib/helm-eks-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
         with:
-          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-          namespace: prometheus
-          chart-repository: https://charts.bitnami.com/bitnami
-          config-files: prometheus_values.yaml 
-          chart-path: bitnami/kube-prometheus
-          name: prometheus
-
-          # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
-          # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
-          # # config-files: fluent-bit/prod/values.yaml
-          # chart-path: prometheus-community/prometheus
-          # namespace: prometheus
-          # name: prometheus
-          # chart-repository: https://prometheus-community.github.io/helm-charts/
-          # # version: 0.20.6
-          # # atomic: true
- 
+          command: | 
+            helm repo add bitnami https://charts.bitnami.com/bitnami 
+            helm repo update && helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
