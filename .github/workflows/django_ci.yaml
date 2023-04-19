@@ -95,4 +95,4 @@ jobs:
           command: | 
             helm repo add bitnami https://charts.bitnami.com/bitnami 
             helm repo update 
-            helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
+            helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --create-namespace --wait --set server.service.type=LoadBalancer
