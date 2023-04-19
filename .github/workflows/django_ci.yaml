@@ -84,22 +84,19 @@ jobs:
             kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
             sleep 10
             kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
-            sleep 10
-            helm repo add eks https://aws.github.io/eks-charts
+            helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+          context: ${{ secrets.KUBECONTEXT }}
 
       - name: Add Prometheus Community Helm repository
-        run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-         
+        run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 
+
       - name: Deploy Prometheus
-        uses: azure/helm@v1
-        with:
-          command: upgrade
-          chart: prometheus-community/prometheus
-          release: prometheus
-          namespace: prometheus
-          values: |
-            server:
-              service:
-                type: LoadBalancer
-            wait: true
-          timeout_seconds: 300
+        run: |
+         helm install prometheus prometheus-community/prometheus \
+           --namespace prometheus \
+           --set server.service.type=LoadBalancer
