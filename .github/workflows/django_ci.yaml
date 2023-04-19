@@ -14,47 +14,47 @@ on:
       - 'main'
 
 jobs:
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # Checkout the code.
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code.
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Docker meta
-  #       id: meta
-  #       uses: docker/metadata-action@v4
-  #       with:
-  #         images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUBIMAGE }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUBIMAGE }}
 
-  #     - name: Login to DockerHub
-  #       if: github.event_name != 'push tag'
-  #       uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to DockerHub
+        if: github.event_name != 'push tag'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  #     - name: Build and push Django
-  #       uses: docker/build-push-action@v4
-  #       with:
-  #         context: djangofiles/
-  #         push: ${{ github.event_name != 'push tag' }}
-  #         tags: ${{ steps.meta.outputs.tags }}
-  #         labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Django
+        uses: docker/build-push-action@v4
+        with:
+          context: djangofiles/
+          push: ${{ github.event_name != 'push tag' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-  #     - name: Docker meta for DB
-  #       id: metadb
-  #       uses: docker/metadata-action@v4
-  #       with:
-  #         images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUBIMAGEDB }}
+      - name: Docker meta for DB
+        id: metadb
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUBIMAGEDB }}
 
-  #     - name: Build and push postgresql
-  #       uses: docker/build-push-action@v4
-  #       with:
-  #         context: postgresqlfiles/
-  #         push: ${{ github.event_name != 'push tag' }}
-  #         tags: ${{ steps.metadb.outputs.tags }}
-  #         labels: ${{ steps.metadb.outputs.labels }}
+      - name: Build and push postgresql
+        uses: docker/build-push-action@v4
+        with:
+          context: postgresqlfiles/
+          push: ${{ github.event_name != 'push tag' }}
+          tags: ${{ steps.metadb.outputs.tags }}
+          labels: ${{ steps.metadb.outputs.labels }}
         
   deploy:
     runs-on: ubuntu-latest
@@ -73,19 +73,19 @@ jobs:
           aws-region: us-east-1
           aws-output: json
 
-      # - name: Deploy Django service with Postgres
-      #   uses: kodermax/kubectl-aws-eks@master
-      #   env:
-      #     KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
-      #   with:
-      #     args: |
-      #       apply -f postgres_pv.yaml  # Persistence volume for Postgresql.
-      #       sleep 10
-      #       kubectl apply -f postgres_pvc.yaml  # Persistence Volume Claim forPostreSQL pods.
-      #       sleep 10
-      #       kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
-      #       sleep 10
-      #       kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
+      - name: Deploy Django service with Postgres
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
+        with:
+          args: |
+            apply -f postgres_pv.yaml  # Persistence volume for Postgresql.
+            sleep 10
+            kubectl apply -f postgres_pvc.yaml  # Persistence Volume Claim forPostreSQL pods.
+            sleep 10
+            kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
+            sleep 10
+            kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
 
       - name: prometheus and grafana helm deployment
         uses: koslib/helm-eks-action@master
@@ -96,6 +96,8 @@ jobs:
             helm repo add bitnami https://charts.bitnami.com/bitnami 
             helm repo add grafana https://grafana.github.io/helm-charts
             helm repo update 
+            kubectl create namespace prometheus
+            kubectl create namespace grafana
             helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
             sleep 10
-            helm install grafana grafana/grafana --namespace grafana --create-namespace --wait --set adminPassword='secretpass' --values .\monitoring\grafana --set service.type=LoadBalancer
+            helm install grafana grafana/grafana --namespace grafana --set adminPassword='secretpass' --values .\monitoring\prometheus-datasource.yaml --set service.type=LoadBalance
