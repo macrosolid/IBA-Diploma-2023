@@ -13,13 +13,14 @@ import environ
 import os
 from pathlib import Path
 
+# Pointer to file with credentials data.
 environ.Env.read_env(os.path.join('mysite/mysite', '.env'))
 
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
 )
-# reading .env file
+# Reading .env file
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -35,14 +36,14 @@ SECRET_KEY = 'django-insecure-pch-h&ke9$f-$2x_y3%_b06qayurwglpf6z0j-ll!o-wau(p!l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS to acces to local host for testin and .us-east-1 from amazon.
 ALLOWED_HOSTS = [
         '.us-east-1.elb.amazonaws.com',
         'localhost'
         ]
 
-
-# Application definition
-
+# Application definition.
+# Add name of application to access our site.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -93,7 +94,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
+# To read DATABASE credentials and data from env file.
 DATABASES = {
     # read os.environ['DATABASE_URL'] and raises
     # ImproperlyConfigured exception if not found

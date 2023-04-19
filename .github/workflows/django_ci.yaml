@@ -1,5 +1,5 @@
-# Build Docker php page image.
-# Triggered on push to main branch and pull requests to main branch.
+# Build Docker Django project with postgresql
+# Triggered on tags push origin main vX.X.X or pull_request in main
 name: Build and Deploy Django project Images
 
 on:
@@ -84,23 +84,22 @@ jobs:
             kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
             sleep 10
             kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
+            sleep 10
+            helm repo add eks https://aws.github.io/eks-charts
 
-
-        # .github/workflows/deploy.yml
-
-      # - name: 'Deploy prometheus by helm'
-      #   uses: 'deliverybot/helm@v1'
-      #   with:
-      #     release: 'prometheus-community'
-      #     namespace: 'prometheus'
-      #     chart: 'prometheus'
-      #     token: '${{ github.token }}'
-      #     values: |
-      #       name: dm-diploma-prometheus
-      #     # value-files: >-
-      #     # [
-      #     #   "values.yaml", 
-      #     #   "values.production.yaml"
-      #     # ]
-      #   env:
-      #     KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+      - name: Add Prometheus Community Helm repository
+        run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+         
+      - name: Deploy Prometheus
+        uses: azure/helm@v1
+        with:
+          command: upgrade
+          chart: prometheus-community/prometheus
+          release: prometheus
+          namespace: prometheus
+          values: |
+            server:
+              service:
+                type: LoadBalancer
+            wait: true
+          timeout_seconds: 300
