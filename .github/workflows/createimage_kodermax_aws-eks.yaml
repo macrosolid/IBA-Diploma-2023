@@ -84,8 +84,7 @@ jobs:
             kubectl apply -f postgres_deployment.yaml  # PostgreSQL Service and Deployment.
             sleep 10
             kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
-            sleep 10
-            helm 
+
 
         # .github/workflows/deploy.yml
 

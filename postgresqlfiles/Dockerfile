@@ -4,4 +4,4 @@ ENV POSTGRES_PASSWORD docker
 
 ENV POSTGRES_DB world
 
-COPY polls.sql /docker-entrypoint-initdb.d/
+COPY init.sql /docker-entrypoint-initdb.d/
