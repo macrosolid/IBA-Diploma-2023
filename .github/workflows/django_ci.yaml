@@ -85,17 +85,31 @@ jobs:
             sleep 10
             kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
+      - name: Deploy Prometheus with Helm
+        uses: bitnami/kubectl@master
         with:
+          command: helm
+          subcommand: upgrade
+          chart: prometheus-community/prometheus
+          release: prometheus
+          namespace: prometheus
+          set: server.service.type=LoadBalancer
           kubeconfig: ${{ secrets.KUBECONFIG }}
-          context: ${{ secrets.KUBECONTEXT }}
 
-      - name: Add Prometheus Community Helm repository
-        run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 
 
-      - name: Deploy Prometheus
-        run: |
-         helm install prometheus prometheus-community/prometheus \
-           --namespace prometheus \
-           --set server.service.type=LoadBalancer
+      # - name: Deploy Helm
+        # uses: bitovi/github-actions-deploy-eks-helm@v1.2.4
+        # with:
+          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # aws-region: us-west-2
+          # cluster-name: mycluster
+          # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
+          # config-files: fluent-bit/prod/values.yaml
+          # chart-path: fluent/fluent-bit
+          # namespace: logging
+          # name: fluent-bit
+          # chart-repository: https://fluent.github.io/helm-charts
+          # version: 0.20.6
+          # atomic: true
+ 
