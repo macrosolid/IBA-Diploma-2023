@@ -87,14 +87,15 @@ jobs:
       #       sleep 10
       #       kubectl apply -f django_deployment.yaml  # Service and deployment of Djangoservice with LoadBalancer publication
 
-      - name: prometheus helm deployment
+      - name: prometheus and grafana helm deployment
         uses: koslib/helm-eks-action@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG64 }}
         with:
           command: | 
             helm repo add bitnami https://charts.bitnami.com/bitnami 
+            helm repo add grafana https://grafana.github.io/helm-charts
             helm repo update 
-            helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --create-namespace --wait --set server.service.type=LoadBalancer
+            helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
             sleep 10
             helm install grafana grafana/grafana --namespace grafana --create-namespace --wait --set adminPassword='secretpass' --values .\monitoring\grafana
