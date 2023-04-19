@@ -96,7 +96,7 @@ jobs:
           args: |
             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
             sleep 10
-            helm install prometheus prometheus-community/prometheus --namespace prometheus --set server.service.type=LoadBalancer
+            helm install --dry-run prometheus prometheus-community/prometheus --namespace prometheus --set server.service.type=LoadBalancer
           # cluster-name: dm-diploma-eks-cluster.us-east-1.eksctl.io
           # # cluster-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           # # config-files: fluent-bit/prod/values.yaml
