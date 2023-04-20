@@ -95,9 +95,15 @@ jobs:
           command: | 
             helm repo add bitnami https://charts.bitnami.com/bitnami 
             helm repo add grafana https://grafana.github.io/helm-charts
+            helm repo add argo https://argoproj.github.io/argo-helm
             helm repo update 
             kubectl create namespace prometheus
             kubectl create namespace grafana
+            kubectl create namespace argocd
+            helm dep update argocd/
             helm install prometheuschart bitnami/kube-prometheus --namespace prometheus --set server.service.type=LoadBalancer
             sleep 10
             helm install grafana grafana/grafana --namespace grafana --set adminPassword='secretpass' --values monitoring/prometheus-datasource.yaml --set service.type=LoadBalancer
+            sleep 10
+            helm install argocd argo/argo-cd -f argocd/values.yaml --namespace argocd  --atomic --set service.type=LoadBalancer
+            # helm install argocd bitnami/argo-cd --namespace argocd --set server.service.type=LoadBalancer
