@@ -106,7 +106,6 @@ jobs:
             helm install grafana grafana/grafana --namespace grafana --set adminPassword='secretpass' --values monitoring/prometheus-datasource.yaml --set service.type=LoadBalancer
             sleep 10
             helm install argocd argo/argo-cd -f argocd/values.yaml --namespace argocd  --atomic
-            kubectl expose svc argocd-server --type=LoadBalancer --name=argocd-server-lb --namespace=argocd
             sleep 10
-            kubectl patch service argocd-server -p '{\"spec\": {\"type\": \"LoadBalancer\"}}' -n argocd
+            kubectl patch service argocd-server -p '{"spec": {"type": "LoadBalancer"}}' -n argocd
             # helm install argocd bitnami/argo-cd --namespace argocd --set argocd-server.service.type=LoadBalancer
