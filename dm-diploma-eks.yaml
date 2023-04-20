@@ -2,18 +2,24 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: dm-diploma-eks-cluster  # Name of the EKS cluster.
+  name: dm-diploma-cluster-eks  # Name of the EKS cluster.
   region: us-east-1
   version: "1.25" # Kubernetes version of the EKS cluster.
 
 nodeGroups: # List of node groups that will be created in the EKS cluster.
 - name: ng-1 # Name of the first node group.
   instanceType: t3.small # EC2 instance type for the node group.
-  desiredCapacity: 2 # Number of desired nodes for the node group.
+  desiredCapacity: 3 # Number of desired nodes for the node group.
   iam: # IAM configuration for the node group.
     withAddonPolicies:
       albIngress: true # Enable the ALB Ingress Controller addon policy.
   minSize: 1 # Minimum number of nodes in the node group.
-  maxSize: 3 # Maximum number of nodes in the node group.
+  maxSize: 4 # Maximum number of nodes in the node group.
+  # instancesDistribution:
+  #   maxPrice: 0.017
+  #   instanceTypes: ["t3.micro", "t3.small"] # At least two instance types should be specified
+  #   onDemandBaseCapacity: 0
+  #   onDemandPercentageAboveBaseCapacity: 50
+  #   spotInstancePools: 2
 
 # availabilityZones: ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d, 'us-east-1e', 'us-east-1f']  # Exclude  'us-east-1e' - because here has a problems
